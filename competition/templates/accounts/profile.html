@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}پروفایل{% endblock %}
+
+{% block content %}
+<h2>پروفایل کاربر</h2>
+
+<p><strong>نام کاربری:</strong> {{ user.username }}</p>
+<p><strong>ایمیل:</strong> {{ user.email }}</p>
+<p><strong>شماره موبایل:</strong> {{ user.phone }}</p>
+<p><strong>وضعیت تایید:</strong> {{ user.is_verified }}</p>
+{% endblock %}
