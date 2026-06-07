@@ -1,1 +1,34 @@
-competition/db.sqlite3
+# --- Python ---
+# Ignore all __pycache__ directories anywhere in the project
+**/__pycache__/
+# Ignore compiled python files
+*.pyc
+*.pyo
+*.pyd
+
+# --- Django ---
+# Ignore the local database
+db.sqlite3
+db.sqlite3-journal
+
+# Ignore user-uploaded media
+media/
+
+# Ignore collected static files
+staticfiles/
+
+# --- Virtual Environments ---
+# Ignore all common names for virtual environments
+venv/
+.venv/
+env/
+ENV/
+bin/
+lib/
+include/
+
+# --- OS Specific ---
+# Ignore macOS system files
+.DS_Store
+# Ignore Windows thumbnail files
+Thumbs.db
