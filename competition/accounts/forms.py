@@ -9,7 +9,8 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'phone', 'password1', 'password2']
+        # فقط فیلدهایی که در دیتابیس (CustomUser) داری رو اینجا لیست کن
+        fields = ['username', 'email', 'phone'] 
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
