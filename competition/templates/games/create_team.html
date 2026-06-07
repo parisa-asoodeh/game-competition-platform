@@ -1,0 +1,7 @@
+<!-- games/templates/games/create_team.html -->
+<h2>ایجاد تیم جدید</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">ثبت تیم</button>
+</form>
