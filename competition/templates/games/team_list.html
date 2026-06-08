@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+لیست تیم‌ها
+{% endblock %}
+
+{% block content %}
+
+<h2>لیست تیم‌ها</h2>
+
+{% if teams %}
+
+    <ul>
+        {% for team in teams %}
+            <li>
+                {{ team.name }}
+                (امتیاز: {{ team.total_score }})
+            </li>
+        {% endfor %}
+    </ul>
+
+{% else %}
+
+    <p>هنوز تیمی ثبت نشده است.</p>
+
+{% endif %}
+
+{% endblock %}

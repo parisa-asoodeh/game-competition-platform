@@ -92,3 +92,14 @@ def create_team(request):
             'form': form
         }
     )
+
+def team_list(request):
+    teams = Team.objects.all().order_by('-total_score')
+
+    return render(
+        request,
+        'games/team_list.html',
+        {
+            'teams': teams
+        }
+    )
