@@ -125,3 +125,24 @@ def team_detail(request, team_id):
             'members': members
         }
     )
+
+@login_required
+def my_team(request):
+
+    membership = TeamMembership.objects.filter(
+        user=request.user
+    ).first()
+
+    if not membership:
+        return render(
+            request,
+            'games/error.html',
+            {
+                'message': 'شما هنوز عضو هیچ تیمی نیستید.'
+            }
+        )
+
+    return redirect(
+        'team_detail',
+        team_id=membership.team.id
+    )
