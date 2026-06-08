@@ -1,27 +1,96 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+
 from .forms import TeamCreateForm
 from .models import Team, TeamMembership
 
 @login_required
 def create_team(request):
-    if request.method == 'POST':
-        form = TeamCreateForm(request.POST)
-        if form.is_valid():
-            # ۱. ایجاد خودِ تیم
-            team = form.save(commit=False)
-            team.captain = request.user
-            team.save()
 
-            # ۲. اضافه کردن کاپیتان به عنوان اولین عضو در TeamMembership
-            TeamMembership.objects.create(team=team, user=request.user)
+```
+# ==========================
+# تغییر شماره 1
+# اگر کاربر قبلاً عضو یک تیم باشد
+# اجازه ساخت تیم جدید ندارد
+# ==========================
+if TeamMembership.objects.filter(user=request.user).exists():
+    return render(
+        request,
+        'games/error.html',
+        {
+            'message': 'شما قبلاً عضو یک تیم شده‌اید.'
+        }
+    )
 
-            # ۳. اضافه کردن ۲ عضو انتخابی
-            for member in form.cleaned_data['members']:
-                TeamMembership.objects.create(team=team, user=member)
+if request.method == 'POST':
 
-            return redirect('home') # یا هر صفحه‌ای که دوست دارید
-    else:
-        form = TeamCreateForm()
-    
-    return render(request, 'games/create_team.html', {'form': form})
+    form = TeamCreateForm(request.POST)
+
+    # ==========================
+    # تغییر شماره 2
+    # جلوگیری از نمایش اعضای دارای تیم
+    # هنگام ارسال فرم نیز دوباره اعمال می‌شود
+    # ==========================
+    used_users = TeamMembership.objects.values_list(
+        'user_id',
+        flat=True
+    )
+
+    form.fields['members'].queryset = (
+        form.fields['members']
+        .queryset
+        .exclude(id=request.user.id)
+        .exclude(id__in=used_users)
+    )
+
+    if form.is_valid():
+
+        # ایجاد تیم
+        team = form.save(commit=False)
+        team.captain = request.user
+        team.save()
+
+        # ثبت کاپیتان به عنوان عضو تیم
+        TeamMembership.objects.create(
+            team=team,
+            user=request.user
+        )
+
+        # ثبت دو عضو انتخاب‌شده
+        for member in form.cleaned_data['members']:
+            TeamMembership.objects.create(
+                team=team,
+                user=member
+            )
+
+        return redirect('home')
+
+else:
+
+    form = TeamCreateForm()
+
+    # ==========================
+    # تغییر شماره 3
+    # کاپیتان خودش را نبیند
+    # اعضای تیم‌های دیگر نیز دیده نشوند
+    # ==========================
+    used_users = TeamMembership.objects.values_list(
+        'user_id',
+        flat=True
+    )
+
+    form.fields['members'].queryset = (
+        form.fields['members']
+        .queryset
+        .exclude(id=request.user.id)
+        .exclude(id__in=used_users)
+    )
+
+return render(
+    request,
+    'games/create_team.html',
+    {
+        'form': form
+    }
+)
+```
