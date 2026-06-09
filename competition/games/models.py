@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 class Team(models.Model):
     name = models.CharField(max_length=100, verbose_name="نام تیم")
@@ -78,5 +79,13 @@ class Match(models.Model):
         verbose_name='تاریخ مسابقه'
     )
 
+    def clean(self):
+
+        if self.team1 == self.team2:
+            raise ValidationError(
+                "یک تیم نمی‌تواند با خودش مسابقه بدهد."
+            )
+    
     def __str__(self):
         return f"{self.team1.name} vs {self.team2.name}"
+    
