@@ -54,14 +54,23 @@ class Match(models.Model):
 
         if self.score_team1 > self.score_team2:
             self.winner = self.team1
-
         elif self.score_team2 > self.score_team1:
             self.winner = self.team2
-
         else:
             self.winner = None
 
-        super().save(*args, **kwargs)    
+        super().save(*args, **kwargs)
+
+        # 🔥 آپدیت امتیاز تیم‌ها
+        self.update_team_scores() 
+
+
+def update_team_scores(self):
+
+    for team in [self.team1, self.team2]:
+
+        team.total_score = team.get_points()
+        team.save()
     
     
     def __str__(self):

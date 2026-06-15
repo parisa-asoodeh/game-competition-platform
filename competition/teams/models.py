@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.db.models import Q
+
 
 class Team(models.Model):
     name = models.CharField(max_length=100, verbose_name="نام تیم")
@@ -13,6 +15,30 @@ class Team(models.Model):
     )
     total_score = models.IntegerField(default=0, verbose_name="امتیاز کلی تیم")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+
+    def get_wins(self):
+        return self.won_matches.count()
+
+    def get_draws(self):
+        from games.models import Match
+
+        return Match.objects.filter(
+            Q(team1=self) | Q(team2=self),
+            winner=None
+        ).count()
+
+    def get_played(self):
+        from games.models import Match
+
+        return Match.objects.filter(
+            Q(team1=self) | Q(team2=self)
+        ).count()
+
+    def get_losses(self):
+        return self.get_played() - self.get_wins() - self.get_draws()
+
+    def get_points(self):
+        return (self.get_wins() * 3) + self.get_draws()
 
     def __str__(self):
         return self.name

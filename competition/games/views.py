@@ -119,29 +119,11 @@ def team_detail(request, team_id):
         team=team
     )
 
-    wins = Match.objects.filter(
-        winner=team
-    ).count()
-
-    draws = Match.objects.filter(
-        team1=team,
-        winner=None
-    ).count()
-
-    draws += Match.objects.filter(
-        team2=team,
-        winner=None
-    ).count()
-
-    played = (
-        Match.objects.filter(team1=team).count()
-        +
-        Match.objects.filter(team2=team).count()
-    )
-
-    losses = played - wins - draws
-
-    points = (wins * 3) + draws
+    wins = team.get_wins()
+    draws = team.get_draws()
+    played = team.get_played()
+    losses = team.get_losses()
+    points = team.get_points()
 
     return render(
         request,
@@ -156,6 +138,7 @@ def team_detail(request, team_id):
             'points': points,
         }
     )
+
 
 @login_required
 def my_team(request):
@@ -200,36 +183,12 @@ def leaderboard(request):
 
     for team in teams:
 
-        wins = Match.objects.filter(
-            winner=team
-        ).count()
-
-        draws = Match.objects.filter(
-            team1=team,
-            winner=None
-        ).count()
-
-        draws += Match.objects.filter(
-            team2=team,
-            winner=None
-        ).count()
-
-        played = (
-            Match.objects.filter(team1=team).count()
-            +
-            Match.objects.filter(team2=team).count()
-        )
-
-        losses = played - wins - draws
-
-        points = (wins * 3) + draws
-
         table.append({
             'team': team,
-            'points': points,
-            'wins': wins,
-            'draws': draws,
-            'losses': losses,
+            'points': team.get_points(),
+            'wins': team.get_wins(),
+            'draws': team.get_draws(),
+            'losses': team.get_losses(),
         })
 
     table.sort(
