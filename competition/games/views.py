@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 from .forms import TeamCreateForm
-from .models import Team, TeamMembership
+from teams.models import Team, TeamMembership
 from django.shortcuts import get_object_or_404
 from .models import Match
 from collections import defaultdict
