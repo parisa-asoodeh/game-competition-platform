@@ -9,35 +9,33 @@ from django.shortcuts import get_object_or_404
 from .models import Match
 from collections import defaultdict
 
+
+
 @login_required
 def create_team(request):
 
-    # اگر کاربر قبلاً عضو تیم باشد
-    if TeamMembership.objects.filter(user=request.user).exists():
-        return render(
-            request,
-            'games/error.html',
-            {
-                'message': 'شما قبلاً عضو یک تیم شده‌اید.'
-            }
-        )
-
-    if request.method == 'POST':
-
-        form = TeamCreateForm(request.POST)
+    # -----------------------------
+    # 1. BUSINESS RULE → move to service
+    # -----------------------------
+    # (اینجا فقط UX check می‌ذاریم، نه قانون اصلی)
+    if request.method == "POST":
+        form = TeamCreateForm(request.POST, request_user=request.user)
 
         if form.is_valid():
+            try:
+                TeamService.create_team(
+                    captain=request.user,
+                    team_name=form.cleaned_data['name'],
+                    members=form.cleaned_data['members']
+                )
 
-            TeamService.create_team(
-                captain=request.user,
-                team_name=form.cleaned_data['name'],
-                members=form.cleaned_data['members']
-            )
+                return redirect('home')
 
-            return redirect('home')
+            except Exception as e:
+                form.add_error(None, str(e))
 
     else:
-        form = TeamCreateForm()
+        form = TeamCreateForm(request_user=request.user)
 
     return render(
         request,
