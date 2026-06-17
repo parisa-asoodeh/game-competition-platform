@@ -48,7 +48,6 @@ class Team(models.Model):
     def get_points(self):
         return (self.get_wins() * 3) + self.get_draws()
     
-    
 
 class TeamMembership(models.Model):
     # ارتباط بین تیم و کاربر
