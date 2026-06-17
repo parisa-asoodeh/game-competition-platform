@@ -82,3 +82,6 @@ class TournamentTeamAdmin(admin.ModelAdmin):
         'team__name',
         'tournament__name',
     )
+
+    def has_add_permission(self, request):
+        return True

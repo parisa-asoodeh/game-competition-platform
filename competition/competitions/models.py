@@ -1,5 +1,6 @@
 from django.db import models
 from teams.models import Team
+from django.core.exceptions import ValidationError
 
 
 class Tournament(models.Model):
@@ -73,6 +74,15 @@ class TournamentTeam(models.Model):
             'team',
         )
 
+    def clean(self):
+        if self.tournament.status != 'draft':
+            raise ValidationError(
+                "بعد از شروع لیگ امکان تغییر تیم‌ها وجود ندارد."
+            )
+        
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"{self.team.name} - {self.tournament.name}"

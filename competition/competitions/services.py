@@ -3,9 +3,39 @@ from django.core.exceptions import ValidationError
 
 from .models import TournamentTeam
 from games.models import Match
+from django.utils import timezone
 
 
 class TournamentService:
+
+    @staticmethod
+    def add_team(tournament, team):
+
+        if tournament.status != 'draft':
+            raise ValidationError(
+                "بعد از شروع لیگ امکان اضافه کردن تیم وجود ندارد."
+            )
+
+
+        return TournamentTeam.objects.create(
+            tournament=tournament,
+            team=team
+        )
+
+
+    @staticmethod
+    def remove_team(tournament, team):
+
+        if tournament.status != 'draft':
+            raise ValidationError(
+                "بعد از شروع لیگ امکان حذف تیم وجود ندارد."
+            )
+
+
+        TournamentTeam.objects.filter(
+            tournament=tournament,
+            team=team
+        ).delete()
 
     @staticmethod
     @transaction.atomic
@@ -78,8 +108,13 @@ class TournamentService:
         # 7. فعال کردن لیگ
         # -----------------------------
         tournament.status = 'active'
+        tournament.started_at = timezone.now()
+
         tournament.save(
-            update_fields=['status']
+            update_fields=[
+                'status',
+                'started_at'
+            ]
         )
 
 
