@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}
+مدیریت اعضای تیم
+{% endblock %}
+
+
+{% block content %}
+
+<h2>
+مدیریت اعضای {{ team.name }}
+</h2>
+
+
+<h3>
+اعضای فعلی
+</h3>
+
+<ul>
+
+{% for member in members %}
+
+<li>
+
+{{ member.user.username }}
+
+{% if member.user != team.captain %}
+
+<form method="post" style="display:inline;">
+
+{% csrf_token %}
+
+<input 
+type="hidden"
+name="user_id"
+value="{{ member.user.id }}"
+>
+
+
+<button 
+name="action"
+value="remove">
+حذف
+</button>
+
+
+</form>
+
+{% else %}
+
+(کاپیتان)
+
+{% endif %}
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+
+
+<hr>
+
+
+<h3>
+اضافه کردن عضو
+</h3>
+
+
+<form method="post">
+
+{% csrf_token %}
+
+
+<select name="user_id">
+
+{% for user in available_users %}
+
+<option value="{{ user.id }}">
+
+{{ user.username }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+
+<button 
+name="action"
+value="add">
+اضافه
+</button>
+
+
+</form>
+
+
+{% endblock %}

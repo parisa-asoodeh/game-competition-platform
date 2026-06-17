@@ -8,6 +8,8 @@ from teams.services import TeamService
 from django.shortcuts import get_object_or_404
 from .models import Match
 from collections import defaultdict
+from teams.services import TeamMemberService
+from django.contrib.auth import get_user_model
 
 
 
@@ -141,5 +143,81 @@ def leaderboard(request):
         'games/leaderboard.html',
         {
             'table': table
+        }
+    )
+
+
+User = get_user_model()
+
+@login_required
+def manage_team_members(request, team_id):
+
+    team = get_object_or_404(
+        Team,
+        id=team_id
+    )
+
+    if team.captain != request.user:
+        return render(
+            request,
+            'games/error.html',
+            {
+                'message': 'فقط کاپیتان می‌تواند اعضای تیم را مدیریت کند.'
+            }
+        )
+
+    if request.method == "POST":
+
+        action = request.POST.get('action')
+        user_id = request.POST.get('user_id')
+
+        user = get_object_or_404(
+            User,
+            id=user_id
+        )
+
+        try:
+
+            if action == "add":
+
+                TeamMemberService.add_member(
+                    team=team,
+                    user=user
+                )
+
+            elif action == "remove":
+
+                TeamMemberService.remove_member(
+                    team=team,
+                    user=user
+                )
+
+        except Exception as e:
+            return render(
+                request,
+                'games/error.html',
+                {
+                    'message': str(e)
+                }
+            )
+
+    members = TeamMembership.objects.filter(
+        team=team
+    )
+
+    available_users = User.objects.exclude(
+        id__in=members.values_list(
+            'user_id',
+            flat=True
+        )
+    )
+
+    return render(
+        request,
+        'games/manage_team_members.html',
+        {
+            'team': team,
+            'members': members,
+            'available_users': available_users,
         }
     )

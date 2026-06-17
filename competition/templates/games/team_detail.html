@@ -12,6 +12,13 @@
     <strong>کاپیتان:</strong>
     {{ team.captain.username }}
 </p>
+{% if user == team.captain %}
+
+<a href="{% url 'manage_team_members' team.id %}">
+مدیریت اعضای تیم
+</a>
+
+{% endif %}
 
 <p>
     <strong>امتیاز تیم:</strong>

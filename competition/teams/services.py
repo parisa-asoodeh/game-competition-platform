@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from .models import Team, TeamMembership
 from django.db import transaction
+from competitions.models import TournamentTeam
 
 
 class TeamService:
@@ -64,3 +65,59 @@ class TeamService:
         ])
 
         return team
+    
+class TeamMemberService:
+    
+    @staticmethod
+    def add_member(*, team, user):
+
+        if team.members.filter(user=user).exists():
+            raise ValidationError(
+                "این کاربر قبلاً عضو تیم است."
+            )
+
+        active_team = TournamentTeam.objects.filter(
+            team=team,
+            tournament__status='active'
+        ).exists()
+
+        if active_team:
+            raise ValidationError(
+                "در زمان برگزاری لیگ امکان تغییر اعضای تیم وجود ندارد."
+            )
+
+        TeamMembership.objects.create(
+            team=team,
+            user=user
+        )
+
+
+    @staticmethod
+    def remove_member(*, team, user):
+
+        if team.captain == user:
+            raise ValidationError(
+                "کاپیتان قابل حذف نیست."
+            )
+
+        active_team = TournamentTeam.objects.filter(
+            team=team,
+            tournament__status='active'
+        ).exists()
+
+        if active_team:
+            raise ValidationError(
+                "در زمان برگزاری لیگ امکان تغییر اعضای تیم وجود ندارد."
+            )
+
+        membership = TeamMembership.objects.filter(
+            team=team,
+            user=user
+        ).first()
+
+        if not membership:
+            raise ValidationError(
+                "این کاربر عضو این تیم نیست."
+            )
+
+        membership.delete()

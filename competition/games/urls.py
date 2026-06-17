@@ -8,4 +8,5 @@ urlpatterns = [
     path('my-team/',views.my_team,name='my_team'),
     path('matches/',views.match_list,name='match_list'),
     path('leaderboard/',views.leaderboard,name='leaderboard'),
+    path('team/<int:team_id>/members/',views.manage_team_members,name='manage_team_members'),
 ]
