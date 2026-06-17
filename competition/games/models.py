@@ -1,9 +1,17 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from teams.models import Team
+from competitions.models import Tournament
 
 
 class Match(models.Model):
+
+    tournament = models.ForeignKey(
+        'competitions.Tournament',
+        on_delete=models.CASCADE,
+        related_name='matches',
+        verbose_name='لیگ',
+    )
 
     team1 = models.ForeignKey(
         Team,
@@ -42,6 +50,7 @@ class Match(models.Model):
         auto_now_add=True,
         verbose_name='تاریخ مسابقه'
     )
+
 
     def clean(self):
 
