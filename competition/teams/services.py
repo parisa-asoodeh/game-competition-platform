@@ -1,10 +1,12 @@
 from django.core.exceptions import ValidationError
 from .models import Team, TeamMembership
+from django.db import transaction
 
 
 class TeamService:
 
     @staticmethod
+    @transaction.atomic
     def create_team(*, captain, team_name, members):
 
         # -------------------------

@@ -5,7 +5,7 @@ from django.db.models import Q
 
 
 class Team(models.Model):
-    name = models.CharField(max_length=100, verbose_name="نام تیم")
+    name = models.CharField(max_length=100, unique=True, verbose_name="نام تیم")
 
     captain = models.ForeignKey(
         settings.AUTH_USER_MODEL,

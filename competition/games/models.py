@@ -51,11 +51,15 @@ class Match(models.Model):
             )
         
     def save(self, *args, **kwargs):
+        
+        self.full_clean()
 
         if self.score_team1 > self.score_team2:
             self.winner = self.team1
+
         elif self.score_team2 > self.score_team1:
             self.winner = self.team2
+
         else:
             self.winner = None
 
