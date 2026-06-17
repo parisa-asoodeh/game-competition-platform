@@ -48,6 +48,60 @@ class Team(models.Model):
     def get_points(self):
         return (self.get_wins() * 3) + self.get_draws()
     
+    #برای جدا کردن امتیازهای تورنمنت ها در جدول های جدا
+    def matches_in_tournament(self, tournament):
+        return self.matches().filter(
+            tournament=tournament
+        )
+    
+    def get_wins_in_tournament(self, tournament):
+        return self.won_matches.filter(
+            tournament=tournament,
+            score_team1__isnull=False,
+            score_team2__isnull=False
+        ).count()
+    
+    def get_draws_in_tournament(self, tournament):
+        return self.matches_in_tournament(
+            tournament
+        ).filter(
+            score_team1__isnull=False,
+            score_team2__isnull=False,
+            winner__isnull=True
+        ).count()
+    
+    def get_played_in_tournament(self, tournament):
+        return self.matches_in_tournament(
+            tournament
+        ).exclude(
+            score_team1__isnull=True
+        ).count()
+    
+    def get_losses_in_tournament(self, tournament):
+        return (
+            self.get_played_in_tournament(
+                tournament
+            )
+            -
+            self.get_wins_in_tournament(
+                tournament
+            )
+            -
+            self.get_draws_in_tournament(
+                tournament
+            )
+        )
+    
+    def get_points_in_tournament(self, tournament):
+        return (
+            self.get_wins_in_tournament(
+                tournament
+            ) * 3
+            +
+            self.get_draws_in_tournament(
+                tournament
+            )
+        )
 
 class TeamMembership(models.Model):
     # ارتباط بین تیم و کاربر
