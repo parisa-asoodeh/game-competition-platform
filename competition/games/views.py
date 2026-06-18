@@ -120,6 +120,21 @@ def match_list(request):
         }
     )
 
+def match_detail(request, match_id):
+
+    match = get_object_or_404(
+        Match,
+        id=match_id
+    )
+    
+    return render(
+        request,
+        'games/match_detail.html',
+        {
+            'match': match
+        }
+    )
+
 
 def leaderboard(request):
 

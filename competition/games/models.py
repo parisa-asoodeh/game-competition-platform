@@ -54,7 +54,11 @@ class Match(models.Model):
         verbose_name='تاریخ مسابقه'
     )
 
-
+    report = models.TextField(
+    blank=True,
+    verbose_name="گزارش مسابقه"
+    )
+    
     def clean(self):
 
         if self.team1 == self.team2:

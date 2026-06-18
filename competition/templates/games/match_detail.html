@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}
+جزئیات مسابقه
+{% endblock %}
+
+{% block content %}
+
+<h2>
+
+{{ match.team1.name }}
+{{ match.score_team1 }}
+
+-
+
+{{ match.score_team2 }}
+{{ match.team2.name }}
+
+</h2>
+
+
+<p>
+
+<strong>لیگ:</strong>
+
+{{ match.tournament.name }}
+
+</p>
+
+
+<p>
+
+<strong>برنده:</strong>
+
+{% if match.winner %}
+    {{ match.winner.name }}
+{% else %}
+    مساوی
+{% endif %}
+
+</p>
+
+
+<p>
+
+<strong>تاریخ:</strong>
+
+{{ match.played_at }}
+
+</p>
+
+
+<hr>
+
+
+<h3>
+گزارش مسابقه
+</h3>
+
+
+{% if match.report %}
+
+<p>
+{{ match.report|linebreaks }}
+</p>
+
+{% else %}
+
+<p>
+برای این مسابقه گزارشی ثبت نشده است.
+</p>
+
+{% endif %}
+
+{% endblock %}

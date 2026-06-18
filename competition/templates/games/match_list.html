@@ -15,13 +15,17 @@
         <hr>
 
         <h3>
-            {{ match.team1.name }}
-            {{ match.score_team1 }}
+            <a href="{% url 'match_detail' match.id %}">
 
-            -
+                {{ match.team1.name }}
+                {{ match.score_team1 }}
 
-            {{ match.score_team2 }}
-            {{ match.team2.name }}
+                -
+
+                {{ match.score_team2 }}
+                {{ match.team2.name }}
+
+            </a>
         </h3>
 
         <p>
