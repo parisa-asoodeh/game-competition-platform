@@ -1,6 +1,21 @@
 class TournamentRankingService:
 
     @staticmethod
+    def ranking_key(
+        team,
+        tournament
+    ):
+
+        return (
+            team.get_points_in_tournament(
+                tournament
+            ),
+            team.get_score_difference_in_tournament(
+                tournament
+            ),
+        )
+
+    @staticmethod
     def rank_teams(tournament):
 
         teams = [
@@ -11,14 +26,11 @@ class TournamentRankingService:
         ]
 
         teams.sort(
-            key=lambda team: (
-                team.get_points_in_tournament(
+            key=lambda team:
+                TournamentRankingService.ranking_key(
+                    team,
                     tournament
                 ),
-                team.get_score_difference_in_tournament(
-                    tournament
-                ),
-            ),
             reverse=True
         )
 
