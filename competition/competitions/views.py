@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
-
 from .models import Tournament
 from games.models import Match
+from .ranking_service import TournamentRankingService
 
 
 def tournament_leaderboard(request, tournament_id):
@@ -11,12 +11,9 @@ def tournament_leaderboard(request, tournament_id):
         id=tournament_id
     )
 
-    teams = [
-        tt.team
-        for tt in tournament.teams.select_related(
-            'team'
-        )
-    ]
+    teams = TournamentRankingService.rank_teams(
+        tournament
+    )
 
     table = []
 
@@ -36,12 +33,11 @@ def tournament_leaderboard(request, tournament_id):
             'losses': team.get_losses_in_tournament(
                 tournament
             ),
+            'score_difference':
+                team.get_score_difference_in_tournament(
+                    tournament
+                ),
         })
-
-    table.sort(
-        key=lambda row: row['points'],
-        reverse=True
-    )
 
     return render(
         request,

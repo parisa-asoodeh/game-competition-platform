@@ -15,6 +15,7 @@
     <th>برد</th>
     <th>مساوی</th>
     <th>باخت</th>
+    <th>تفاضل</th>
 </tr>
 
 {% for row in table %}
@@ -43,6 +44,10 @@
 
 <td>
 {{ row.losses }}
+</td>
+
+<td>
+{{ row.score_difference }}
 </td>
 
 </tr>

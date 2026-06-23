@@ -135,6 +135,32 @@ class Team(models.Model):
                 tournament
             )
         )
+    
+    def get_score_difference_in_tournament(
+        self,
+        tournament
+    ):
+        difference = 0
+        matches = self.matches_in_tournament(
+            tournament
+        )
+        for match in matches:
+            if not match.is_complete:
+                continue
+            if match.team1 == self:
+                difference += (
+                    match.score_team1
+                    -
+                    match.score_team2
+                )
+            else:
+                difference += (
+                    match.score_team2
+                    -
+                    match.score_team1
+                )
+        return difference
+
 
 class TeamMembership(models.Model):
     # ارتباط بین تیم و کاربر

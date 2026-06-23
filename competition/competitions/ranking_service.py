@@ -11,8 +11,13 @@ class TournamentRankingService:
         ]
 
         teams.sort(
-            key=lambda team: team.get_points_in_tournament(
-                tournament
+            key=lambda team: (
+                team.get_points_in_tournament(
+                    tournament
+                ),
+                team.get_score_difference_in_tournament(
+                    tournament
+                ),
             ),
             reverse=True
         )
