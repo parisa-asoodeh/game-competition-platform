@@ -20,16 +20,21 @@
 
 
 <p>
-
 <strong>لیگ:</strong>
-
 {{ match.tournament.name }}
-
 </p>
 
+<p>
+<strong>نوع بازی:</strong>
+
+{% if match.tournament.game_type %}
+    {{ match.tournament.game_type.name }}
+{% else %}
+    تعریف نشده
+{% endif %}
+</p>
 
 <p>
-
 <strong>برنده:</strong>
 
 {% if match.winner %}
@@ -37,16 +42,13 @@
 {% else %}
     مساوی
 {% endif %}
-
 </p>
 
 
 <p>
-
 <strong>تاریخ:</strong>
 
 {{ match.played_at }}
-
 </p>
 
 

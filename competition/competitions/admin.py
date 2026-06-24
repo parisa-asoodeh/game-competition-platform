@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib import messages
 
-from .models import Tournament, TournamentTeam
+from .models import Tournament, TournamentTeam, GameType
 from .services import TournamentService
 
 
@@ -85,3 +85,12 @@ class TournamentTeamAdmin(admin.ModelAdmin):
 
     def has_add_permission(self, request):
         return True
+    
+
+
+@admin.register(GameType)
+class GameTypeAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'name',
+    )

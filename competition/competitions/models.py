@@ -3,6 +3,18 @@ from teams.models import Team
 from django.core.exceptions import ValidationError
 
 
+class GameType(models.Model):
+
+    name = models.CharField(
+        max_length=100,
+        unique=True,
+        verbose_name='نوع بازی'
+    )
+    def __str__(self):
+        return self.name
+    
+
+
 class Tournament(models.Model):
 
     STATUS_CHOICES = [
@@ -47,6 +59,15 @@ class Tournament(models.Model):
     on_delete=models.SET_NULL,
     related_name='won_tournaments',
     verbose_name='قهرمان'
+    )
+
+    game_type = models.ForeignKey(
+    'GameType',
+    on_delete=models.PROTECT,
+    null=True,
+    blank=True,
+    related_name='tournaments',
+    verbose_name='نوع بازی'
     )
 
     def __str__(self):
@@ -94,3 +115,4 @@ class TournamentTeam(models.Model):
 
     def __str__(self):
         return f"{self.team.name} - {self.tournament.name}"
+    
