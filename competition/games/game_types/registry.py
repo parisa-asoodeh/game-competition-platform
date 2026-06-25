@@ -1,11 +1,14 @@
-from .score_based import ScoreBasedGameType
+from .quiz import QuizGameType
+from .puzzle import PuzzleGameType
+from .math import MathGameType
+from .memory import MemoryGameType
 
 
 GAME_TYPES = {
-    'quiz': ScoreBasedGameType,
-    'puzzle': ScoreBasedGameType,
-    'math': ScoreBasedGameType,
-    'memory': ScoreBasedGameType,
+    'quiz': QuizGameType,
+    'puzzle': PuzzleGameType,
+    'math': MathGameType,
+    'memory': MemoryGameType,
 }
 
 def get_game_type(game_type):
