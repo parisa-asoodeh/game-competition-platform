@@ -2,6 +2,13 @@ from .best_player_service import BestPlayerService
 from .performance_analysis_service import (
     PerformanceAnalysisService
 )
+from .best_player_service import (
+    BestPlayerService,
+)
+
+from .performance_analysis_service import (
+    PerformanceAnalysisService,
+)
 
 
 class MatchReportService:

@@ -1,35 +1,23 @@
+from .analyzers.score_analyzer import (
+    ScoreAnalyzer,
+)
+
+from .analyzers.balance_analyzer import (
+    BalanceAnalyzer,
+)
+
+
 class PerformanceAnalysisService:
 
     @staticmethod
     def generate(match):
 
-        if match.winner is None:
+        analyses = [
 
-            return (
-                "این مسابقه کاملاً نزدیک بود و "
-                "هیچ تیمی برتری محسوسی نداشت."
-            )
+            ScoreAnalyzer.analyze(match),
 
-        diff = abs(
-            match.score_team1 -
-            match.score_team2
-        )
+            BalanceAnalyzer.analyze(match),
 
-        if diff >= 50:
+        ]
 
-            return (
-                "اختلاف امتیاز بسیار زیاد بود و "
-                "تیم برنده عملکردی کاملاً برتر داشت."
-            )
-
-        if diff >= 20:
-
-            return (
-                "تیم برنده در طول مسابقه "
-                "برتری محسوسی نسبت به حریف داشت."
-            )
-
-        return (
-            "مسابقه نزدیک و رقابتی بود و "
-            "تیم برنده با اختلاف کمی پیروز شد."
-        )
+        return " ".join(analyses)
