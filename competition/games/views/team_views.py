@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from teams.services import TeamMemberService
 from django.contrib.auth import get_user_model
 from teams.statistics.team_statistics_service import TeamStatisticsService
+from teams.analysis.team_analysis_service import TeamAnalysisService
 
 
 @login_required
@@ -66,18 +67,20 @@ def team_detail(request, team_id):
     team = get_object_or_404(Team, id=team_id)
     members = TeamMembership.objects.filter(team=team)
 
+    summary = TeamAnalysisService.build_team_summary(team)
+
     return render(
         request,
         'games/team_detail.html',
         {
             'team': team,
-            'members': members,
-
-            'wins': TeamStatisticsService.get_wins(team),
-            'draws': TeamStatisticsService.get_draws(team),
-            'losses': TeamStatisticsService.get_losses(team),
-            'played': TeamStatisticsService.get_played(team),
-            'points': TeamStatisticsService.get_points(team),
+            'members': summary['members'],
+            'wins': summary['wins'],
+            'draws': summary['draws'],
+            'losses': summary['losses'],
+            'played': summary['played'],
+            'points': summary['points'],
+            'form': summary['form'],
         }
     )
 

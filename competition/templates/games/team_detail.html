@@ -50,6 +50,16 @@
 </p>
 
 <hr>
+<p>
+    <strong>فرم تیم:</strong>
+
+    {% for result in form %}
+        {{ result }}
+    {% empty %}
+        هنوز مسابقه‌ای انجام نشده است.
+    {% endfor %}
+</p>
+<hr>
 
 <h3>اعضای تیم</h3>
 

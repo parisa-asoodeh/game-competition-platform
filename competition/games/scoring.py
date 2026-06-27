@@ -2,6 +2,7 @@ from django.db.models import Sum
 from .models import MatchPlayerScore
 from teams.models import TeamMembership
 from .game_types.registry import get_game_type
+from .player_score_service import PlayerScoreService
 
 
 class MatchScoringService:
@@ -82,6 +83,8 @@ class MatchScoringService:
                     'winner',
                 ]
             )
+            
+            PlayerScoreService.update_player_scores(match)
 
             return match
 
