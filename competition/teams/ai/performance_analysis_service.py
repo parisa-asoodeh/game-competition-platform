@@ -5,6 +5,9 @@ from .analyzers.score_analyzer import (
 from .analyzers.balance_analyzer import (
     BalanceAnalyzer,
 )
+from .analyzers.star_dependency_analyzer import (
+    StarDependencyAnalyzer
+)
 
 
 class PerformanceAnalysisService:
@@ -12,12 +15,30 @@ class PerformanceAnalysisService:
     @staticmethod
     def generate(match):
 
-        analyses = [
+        analyzers = [
 
             ScoreAnalyzer.analyze(match),
 
             BalanceAnalyzer.analyze(match),
 
+            StarDependencyAnalyzer.analyze(match),
+
         ]
 
-        return " ".join(analyses)
+        summaries = []
+
+        for analyzer in analyzers:
+
+            if isinstance(analyzer, dict):
+
+                summaries.append(
+                    analyzer["summary"]
+                )
+
+            else:
+
+                summaries.append(
+                    analyzer
+                )
+
+        return " ".join(summaries)
