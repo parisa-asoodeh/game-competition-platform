@@ -25,7 +25,7 @@ class PerformanceAnalysisService:
     @staticmethod
     def generate(match):
 
-        analyzers = [
+        match_analyzers = [
 
             ScoreAnalyzer.analyze(match),
 
@@ -38,7 +38,7 @@ class PerformanceAnalysisService:
 
         summaries = []
 
-        for analyzer in analyzers:
+        for analyzer in match_analyzers:
 
             if isinstance(analyzer, dict):
 
@@ -52,46 +52,30 @@ class PerformanceAnalysisService:
                     analyzer
                 )
 
-        # MomentumAnalyzer با بقیه فرق دارد چون Match Analyzer است
-        team1_momentum = (
-            MomentumAnalyzer.analyze(
+
+        team_analyzers = [
+
+            MomentumAnalyzer,
+
+            ConsistencyAnalyzer,
+        ]
+
+        for analyzer in team_analyzers:
+
+            team1_result = analyzer.analyze(
                 match.team1
             )
-        )
 
-        team2_momentum = (
-            MomentumAnalyzer.analyze(
+            team2_result = analyzer.analyze(
                 match.team2
             )
-        )
 
-        summaries.append(
-            team1_momentum["summary"]
-        )
-
-        summaries.append(
-            team2_momentum["summary"]
-        )
-
-        # ConsistencyAnalyzer هم یک Match Analyzer است
-        team1_consistency = (
-            ConsistencyAnalyzer.analyze(
-                match.team1
+            summaries.append(
+                team1_result["summary"]
             )
-        )
 
-        team2_consistency = (
-            ConsistencyAnalyzer.analyze(
-                match.team2
+            summaries.append(
+                team2_result["summary"]
             )
-        )
-
-        summaries.append(
-            team1_consistency["summary"]
-        )
-
-        summaries.append(
-            team2_consistency["summary"]
-        )
 
         return " ".join(summaries)
