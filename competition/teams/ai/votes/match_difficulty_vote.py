@@ -54,6 +54,11 @@ class MatchDifficultyVote:
             team1_result["average_difference"] -
             team2_result["average_difference"]
         )
+        
+        confidence = round(
+            confidence,
+            1,
+        )
 
         if vote == team1:
 

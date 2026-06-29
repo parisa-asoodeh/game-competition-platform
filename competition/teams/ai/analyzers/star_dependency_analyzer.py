@@ -1,19 +1,10 @@
-from games.models import MatchPlayerScore
-
-
 class StarDependencyAnalyzer:
 
     @staticmethod
-    def analyze(team):
+    def analyze(team_context):
 
-        scores = list(
-            MatchPlayerScore.objects.filter(
-                team=team
-            ).values_list(
-                "score",
-                flat=True
-            )
-        )
+        team = team_context["team"]
+        scores = team_context["scores"]
 
         result = (
             StarDependencyAnalyzer.dependency_percentage(

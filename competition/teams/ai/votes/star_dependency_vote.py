@@ -7,20 +7,19 @@ class StarDependencyVote:
 
     @staticmethod
     def vote(
-        team1,
-        team2,
+        team1_context,
+        team2_context,
     ):
 
-        team1_result = (
-            StarDependencyAnalyzer.analyze(
-                team1
-            )
+        team1 = team1_context["team"]
+        team2 = team2_context["team"]
+
+        team1_result = StarDependencyAnalyzer.analyze(
+            team1_context,
         )
 
-        team2_result = (
-            StarDependencyAnalyzer.analyze(
-                team2
-            )
+        team2_result = StarDependencyAnalyzer.analyze(
+            team2_context,
         )
 
         team1_percentage = (
@@ -46,6 +45,10 @@ class StarDependencyVote:
         confidence = abs(
             team1_percentage -
             team2_percentage
+        )
+        confidence = round(
+            confidence,
+            1,
         )
 
         if vote == team1:
