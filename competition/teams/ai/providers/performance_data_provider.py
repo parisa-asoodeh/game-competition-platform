@@ -43,15 +43,52 @@ class PerformanceDataProvider:
         )
 
 
+        history = PerformanceDataProvider.get_history(
+            team,
+            tournament,
+        )
+
+        mode = (
+            "history"
+            if len(matches) == 0
+            else "current"
+        )
+
         return {
 
             "team": team,
 
-            "matches": matches,
+            "matches": list(matches),
 
-            "scores": scores,
+            "scores": (
+                scores
+                if scores
+                else history
+            ),
 
-            "history": [],
+            "history": history,
 
-            "mode": "current",
+            "mode": mode,
         }
+    
+
+    @staticmethod
+    def get_history(
+        team,
+        tournament,
+    ):
+
+        from games.models import MatchPlayerScore
+
+        return list(
+
+            MatchPlayerScore.objects.filter(
+                team=team,
+            ).exclude(
+                match__tournament=tournament,
+            ).values_list(
+                "score",
+                flat=True,
+            )
+
+        )

@@ -20,6 +20,9 @@ from .analyzers.consistency_analyzer import (
 from .analyzers.match_difficulty_analyzer import (
     MatchDifficultyAnalyzer
 )
+from .providers.performance_data_provider import (
+    PerformanceDataProvider,
+)
 
 
 
@@ -67,13 +70,29 @@ class PerformanceAnalysisService:
 
         for analyzer in team_analyzers:
 
+            team1_context = (
+                PerformanceDataProvider.get_team_context(
+                    match.tournament,
+                    match.team1,
+                )
+            )
+
+            team2_context = (
+                PerformanceDataProvider.get_team_context(
+                    match.tournament,
+                    match.team2,
+                )
+            )
+
+
             team1_result = analyzer.analyze(
-                match.team1
+                team1_context
             )
 
             team2_result = analyzer.analyze(
-                match.team2
+                team2_context
             )
+
 
             summaries.append(
                 team1_result["summary"]
