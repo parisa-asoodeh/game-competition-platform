@@ -4,15 +4,10 @@ from games.models import MatchPlayerScore
 class AverageAnalyzer:
 
     @staticmethod
-    def analyze(team):
-        scores = list(
-            MatchPlayerScore.objects.filter(
-                team=team
-            ).values_list(
-                "score",
-                flat=True
-            )
-        )
+    def analyze(team_context):
+
+        team = team_context["team"]
+        scores = team_context["scores"]
 
         result = AverageAnalyzer.average(
             scores

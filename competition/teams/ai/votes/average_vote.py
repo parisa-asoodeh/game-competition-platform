@@ -7,21 +7,21 @@ class AverageVote:
 
     @staticmethod
     def vote(
-        team1,
-        team2,
+        team1_context,
+        team2_context,
     ):
         # مرحله اول نتیجه Analyzerها را بگیر
-        team1_result = (
-            AverageAnalyzer.analyze(
-                team1
-            )
+        team1_result = AverageAnalyzer.analyze(
+            team1_context
         )
 
-        team2_result = (
-            AverageAnalyzer.analyze(
-                team2
-            )
+        team2_result = AverageAnalyzer.analyze(
+            team2_context
         )
+
+        team1 = team1_context["team"]
+        team2 = team2_context["team"]
+        
         # مرحله دوم میانگین‌ها را استخراج کن
         team1_average = (
             team1_result["average"]
