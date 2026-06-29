@@ -10,6 +10,9 @@ class AverageVote:
         team1_context,
         team2_context,
     ):
+        
+        team1 = team1_context["team"]
+        team2 = team2_context["team"]
         # مرحله اول نتیجه Analyzerها را بگیر
         team1_result = AverageAnalyzer.analyze(
             team1_context
@@ -18,9 +21,6 @@ class AverageVote:
         team2_result = AverageAnalyzer.analyze(
             team2_context
         )
-
-        team1 = team1_context["team"]
-        team2 = team2_context["team"]
         
         # مرحله دوم میانگین‌ها را استخراج کن
         team1_average = (

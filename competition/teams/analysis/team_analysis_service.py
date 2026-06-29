@@ -138,3 +138,14 @@ class TeamAnalysisService:
             differences.append(diff)
 
         return differences
+    
+
+    @staticmethod
+    def get_recent_scores_from_context(
+        team_context,
+        limit=5,
+    ):
+
+        scores = team_context["scores"]
+
+        return scores[-limit:]
