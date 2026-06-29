@@ -11,6 +11,7 @@ class ChampionPredictor:
     @staticmethod
     def predict(
         teams,
+        tournament,
     ):
 
         matchups = (
@@ -22,6 +23,7 @@ class ChampionPredictor:
         results = (
             ChampionPredictor.evaluate_matchups(
                 matchups,
+                tournament,
             )
         )
 
@@ -110,6 +112,7 @@ class ChampionPredictor:
     @staticmethod
     def evaluate_matchups(
         matchups,
+        tournament,
     ):
 
         results = []
@@ -120,6 +123,7 @@ class ChampionPredictor:
                 WinnerPredictor.predict(
                     team1,
                     team2,
+                    tournament,
                 )
             )
 

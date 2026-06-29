@@ -40,6 +40,7 @@ class PredictionService:
 
         return ChampionPredictor.predict(
             teams=teams,
+            tournament=tournament,
         )
 
 

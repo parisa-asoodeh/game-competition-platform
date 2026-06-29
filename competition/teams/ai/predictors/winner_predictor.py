@@ -44,31 +44,26 @@ class WinnerPredictor:
     def predict(
         team1,
         team2,
-        tournament=None,
+        tournament,
     ):
-        
-        team1_context = None
-        team2_context = None
 
-        if tournament is not None:
-
-            team1_context = (
-                PerformanceDataProvider.get_team_context(
-                    tournament,
-                    team1,
-                )
+        team1_context = (
+            PerformanceDataProvider.get_team_context(
+                tournament,
+                team1,
             )
+        )
 
-            team2_context = (
-                PerformanceDataProvider.get_team_context(
-                    tournament,
-                    team2,
-                )
+        team2_context = (
+            PerformanceDataProvider.get_team_context(
+                tournament,
+                team2,
             )
+        )
 
         votes = WinnerPredictor.collect_votes(
-            team1,
-            team2,
+            team1_context,
+            team2_context,
         )
 
         scores = WinnerPredictor.calculate_scores(
@@ -113,11 +108,13 @@ class WinnerPredictor:
 
             "team2_context": team2_context,
         }
+        
+
 
     @staticmethod
     def collect_votes(
-        team1,
-        team2,
+        team1_context,
+        team2_context,
     ):
 
         votes = []
@@ -125,8 +122,8 @@ class WinnerPredictor:
         for vote_class in WinnerPredictor.VOTES:
 
             result = vote_class.vote(
-                team1,
-                team2,
+                team1_context,
+                team2_context,
             )
 
             votes.append(
@@ -134,6 +131,7 @@ class WinnerPredictor:
             )
 
         return votes
+    
 
 
     @staticmethod
