@@ -17,6 +17,12 @@ from teams.ai.votes.match_difficulty_vote import (
 from teams.ai.votes.star_dependency_vote import (
     StarDependencyVote,
 )
+from teams.ai.analyzer_weights import (
+    ANALYZER_WEIGHTS,
+)
+from teams.ai.providers.performance_data_provider import (
+    PerformanceDataProvider,
+)
 
 
 class WinnerPredictor:
@@ -38,7 +44,27 @@ class WinnerPredictor:
     def predict(
         team1,
         team2,
+        tournament=None,
     ):
+        
+        team1_context = None
+        team2_context = None
+
+        if tournament is not None:
+
+            team1_context = (
+                PerformanceDataProvider.get_team_context(
+                    tournament,
+                    team1,
+                )
+            )
+
+            team2_context = (
+                PerformanceDataProvider.get_team_context(
+                    tournament,
+                    team2,
+                )
+            )
 
         votes = WinnerPredictor.collect_votes(
             team1,
@@ -82,6 +108,10 @@ class WinnerPredictor:
             "vote_scores": scores,
 
             "prediction_summary": summary,
+
+            "team1_context": team1_context,
+
+            "team2_context": team2_context,
         }
 
     @staticmethod
@@ -122,16 +152,25 @@ class WinnerPredictor:
 
         for vote in votes:
 
+            weight = ANALYZER_WEIGHTS.get(
+                vote["analyzer"],
+                1,
+            )
+
+            weighted_confidence = (
+                vote["confidence"] * weight
+            )
+
             if vote["vote"] == team1:
 
                 scores[team1.id] += (
-                    vote["confidence"]
+                    weighted_confidence
                 )
 
             elif vote["vote"] == team2:
 
                 scores[team2.id] += (
-                    vote["confidence"]
+                    weighted_confidence
                 )
 
         return scores
@@ -153,8 +192,8 @@ class WinnerPredictor:
         if team2_score > team1_score:
             return team2
 
-        return None
-    
+        return None   
+
 
     @staticmethod
     def calculate_confidence(

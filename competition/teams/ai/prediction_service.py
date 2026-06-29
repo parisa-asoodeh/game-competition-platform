@@ -1,6 +1,9 @@
 from teams.ai.predictors.winner_predictor import (
     WinnerPredictor,
 )
+from teams.ai.predictors.champion_predictor import (
+    ChampionPredictor,
+)
 
 
 class PredictionService:
@@ -21,10 +24,24 @@ class PredictionService:
 
         pass
 
-    @staticmethod
-    def predict_champion():
 
-        pass
+    @staticmethod
+    def predict_champion(
+        tournament,
+    ):
+
+        teams = [
+
+            tournament_team.team
+
+            for tournament_team in tournament.teams.all()
+
+        ]
+
+        return ChampionPredictor.predict(
+            teams=teams,
+        )
+
 
     @staticmethod
     def simulate_match():
