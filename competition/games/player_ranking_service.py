@@ -63,3 +63,18 @@ class PlayerRankingService:
         )
 
         return leaderboard
+    
+
+    @staticmethod
+    def get_total_score(user):
+
+        scores = MatchPlayerScore.objects.filter(
+            user=user
+        )
+
+        return (
+            scores.aggregate(
+                total=Sum("score")
+            )["total"]
+            or 0
+        )

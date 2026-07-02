@@ -1,5 +1,8 @@
 from games.models import Match
 from teams.models import TeamMembership
+from games.player_ranking_service import (
+    PlayerRankingService,
+)
 
 
 class TeamAnalysisService:
@@ -7,8 +10,20 @@ class TeamAnalysisService:
     @staticmethod
     def build_team_summary(team):
 
+        members = TeamMembership.objects.filter(
+            team=team
+        )
+
+        for member in members:
+
+            member.individual_score = (
+                PlayerRankingService.get_total_score(
+                    member.user
+                )
+            )
+
         return {
-            "members": TeamMembership.objects.filter(team=team),
+            "members": members,
             "wins": team.get_wins(),
             "draws": team.get_draws(),
             "losses": team.get_losses(),
