@@ -330,3 +330,18 @@ class MatchScoringServiceTest(TestCase):
                 receiver=recalculate_after_save,
                 sender=MatchPlayerScore,
             )
+
+
+    @patch("games.scoring.MatchScoringService.recalculate_match")
+    def test_finalize_match_calls_recalculate_match(
+        self,
+        mock_recalculate,
+    ):
+
+        MatchScoringService.finalize_match(
+            self.match,
+        )
+
+        mock_recalculate.assert_called_once_with(
+            self.match,
+        )
